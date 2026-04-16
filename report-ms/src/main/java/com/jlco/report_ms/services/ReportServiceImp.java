@@ -1,7 +1,6 @@
 package com.jlco.report_ms.services;
 
 import com.jlco.report_ms.repositories.CompaniesRepository;
-import com.netflix.discovery.EurekaClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,11 +11,11 @@ import org.springframework.stereotype.Service;
 public class ReportServiceImp implements ReportService{
 
     private final CompaniesRepository companiesRepository;
-    private final EurekaClient eurekaClient;
 
     @Override
     public String makeReport(String name) {
-        return "";
+
+        return  companiesRepository.getByName(name).orElseThrow().getName();
     }
 
     @Override
