@@ -17,7 +17,7 @@ spring:
 server:
   servlet:
     context-path: /report-ms
-  port: 7070
+  port: 0 #7070
 eureka:
   instance:
     instance-id: "${spring.application.name}:${random.value}"
