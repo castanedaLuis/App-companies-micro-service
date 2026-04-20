@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Transactional
 @Service
 @AllArgsConstructor
-public class AuthServiceImpl implements AuthSeervice{
+public class AuthServiceImpl implements AuthService {
 
 
     private final UserRepository userRepository;
