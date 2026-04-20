@@ -3,6 +3,7 @@ package com.jlco.auth_server.services;
 import com.jlco.auth_server.dtos.TokenDto;
 import com.jlco.auth_server.dtos.UserDto;
 import com.jlco.auth_server.entities.UserEntity;
+import com.jlco.auth_server.helpers.JwtHelper;
 import com.jlco.auth_server.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,17 +20,24 @@ public class AuthServiceImpl implements AuthSeervice{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final JwtHelper jwtHelper;
     private static final String USER_EXCEPTION_MSG = "Error to auth user";
 
     @Override
     public TokenDto login(UserDto user) {
-        return null;
+        final var userFromDB = this.userRepository.findByUsername(user.getUsername())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, USER_EXCEPTION_MSG));
+
+        this.validPassword(user, userFromDB);
+        return TokenDto.builder().accessToken(this.jwtHelper.createToken(userFromDB.getUsername())).build();
     }
 
     @Override
     public TokenDto validateToken(TokenDto token) {
-        return null;
+        if (this.jwtHelper.validateToken(token.getAccessToken())) {
+            return TokenDto.builder().accessToken(token.getAccessToken()).build();
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, USER_EXCEPTION_MSG);
     }
 
     private void validPassword(UserDto userDto, UserEntity userEntity) {
