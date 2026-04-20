@@ -21,6 +21,7 @@ public class AuthController {
 
     @PostMapping(path = "jwt")
     public ResponseEntity<TokenDto> jwtValidate(@RequestHeader String accessToken) {
+        System.out.println("Header recibido: " + accessToken);
         return ResponseEntity.ok(
                         this.authService.validateToken(TokenDto
                                 .builder()
